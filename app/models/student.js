@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
     firstname: {
@@ -11,6 +11,11 @@ const studentSchema = new mongoose.Schema({
         require: [true, 'Entrez un nom'],
         trim: true
     },
+    class:{
+        type: mongoose.Schema.Types.ObjectId, ref: 'classSchema',
+        require : false,
+        trim: true
+    }
 },{
     timestamps : {
         createdAt: 'created_at',

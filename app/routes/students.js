@@ -30,6 +30,14 @@ router.post('/', async (req, res) => {
         return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
     }
 })
+.get('/test', async (req, res) => {
+    try {
+        let data = await studentModel.find().populate('class');
+        return res.status(200).json(data);
+    } catch (e) {
+        return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
+    }
+})
 .get('/:id', async (req, res) => {
     try {
         const {id} = req.params;
