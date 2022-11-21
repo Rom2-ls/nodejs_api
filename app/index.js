@@ -8,7 +8,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://root:root@mongo:27017/b3?authSource=admin', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true
 }, (error) => {
   if (error) {

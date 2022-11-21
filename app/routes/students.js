@@ -52,7 +52,8 @@ router.post('/', async (req, res) => {
     try {
         const {id} = req.params;
         const {firstname} = req.body;
-        await studentModel.findByIdAndUpdate(id, {firstname: firstname});
+        const {lastname} = req.body;
+        await studentModel.findByIdAndUpdate(id, {firstname: firstname, lastname: lastname});
         return res.status(200).json(studentModel);
     } catch (e) {
         return res.status(500).json({"msg" : "Une erreur est survenue : " + e});

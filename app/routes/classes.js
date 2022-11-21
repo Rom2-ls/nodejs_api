@@ -1,53 +1,59 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
+const classModel = require('../models/classe');
 
 let router = express.Router();
-let classes = [];
 
-// middleware that is specific to this router
-router.use(function timeLog(req, res, next) {
-  console.log('Time: ', Date.now());
-  next();
+router.post('/', async (req, res) => {
+	const {name} = req.body;
 
+	if (typeof name === 'undefined' || name == "") {
+		return res.status(500).json({"msg": "Vous devez enter un nom de classe"});
+	}
+
+	try {
+		let classe = await classModel.create({
+			name: name
+		});
+		return res.status(200).json(classe);
+	} catch (e) {
+		return res.status(500).json({"msg": "Une erreur est survenue : " + e})
+	}
 })
-.post('/', (req, res) => {
-  const {name} = req.body;
-
-  let classe = {
-    id: uuidv4(),
-    name: name
-    //ou --> name
-  };
-
-  classes.push(classe);
-
-  res.status(200).json(classe);
+.get('/', async (req, res) => {
+	try {
+        let data = await classModel.find();
+        return res.status(200).json(data);
+    } catch (e) {
+        return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
+    }
 })
-.get('/', (req, res) => {
-  res.status(200).json(classes);
+.get('/:id', async (req, res) => {
+	try {
+        const {id} = req.params;
+        let data = await classModel.findById(id);
+        return res.status(200).json(data);
+    } catch (e) {
+        return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
+    }
 })
-.get('/:id', (req, res) => {
-  const {id} = req.params;
-
-  let classe = classes.find(el => el.id === id);
-
-  res.status(200).json(classe.name);
+.delete('/:id', async (req, res) => {
+	try {
+        const {id} = req.params;
+        await classModel.findByIdAndDelete(id);
+        return res.status(200).json(classModel);
+    } catch (e) {
+        return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
+    }
 })
-.delete('/:id', (req, res) => {
-  const {id} = req.params;
-
-  classes = classes.filter(el => el.id !== id);
-
-  res.status(200).json(classes);
-})
-.put('/:id', (req, res) => {
-  const {id} = req.params;
-  const {name} = req.body;
-
-  let classe = classes.find(el => el.id === id);
-  classe.name = name;
-
-  res.status(200).json(classes);
+.put('/:id', async (req, res) => {
+	try {
+		const {id} = req.params;
+		const {name} = req.body;
+		await classModel.findByIdAndUpdate(id, {name: name});
+		return res.status(200).json(studentModel);
+	} catch (e) {
+		return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
+	}
 })
 
 module.exports = router;
