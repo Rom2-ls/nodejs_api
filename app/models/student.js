@@ -11,6 +11,17 @@ const studentSchema = new mongoose.Schema({
         require: [true, 'Entrez un nom'],
         trim: true
     },
+    email: {
+        type: String,
+        require: [true, 'Entrez un email'],
+        trim: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        require: [true, 'Entrez un mot de passe'],
+        trim: true
+    },
     class:{
         type: mongoose.Schema.Types.ObjectId, ref: 'classSchema',
         require : false,
