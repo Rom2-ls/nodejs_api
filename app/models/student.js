@@ -23,7 +23,8 @@ const studentSchema = new mongoose.Schema({
         trim: true
     },
     class:{
-        type: mongoose.Schema.Types.ObjectId, ref: 'classSchema',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Classe',
         require : false,
         trim: true
     }

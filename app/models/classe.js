@@ -1,3 +1,4 @@
+const { Schema } = require("mongoose");
 const mongoose = require("mongoose")
 
 const classSchema = new mongoose.Schema({
@@ -5,7 +6,13 @@ const classSchema = new mongoose.Schema({
         type: String,
         require: [true, 'Entrez un nom de classe'],
         trim: true
-    }
+    },
+    students: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        require: false,
+        trim: true
+    }]
 },{
     timestamps : {
         createdAt: 'created_at',

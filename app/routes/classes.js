@@ -55,5 +55,23 @@ router.post('/', async (req, res) => {
 		return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
 	}
 })
+.post('/add-student', async (req, res) => {
+	try {
+		const {studentId, classId} = req.body;
+
+		classe = await classModel.findOneAndUpdate({
+			_id: classId.trim()
+		},{
+			$push: { students: [studentId.trim()] }
+		},
+		{
+			new: true
+		}).populate("students");
+
+		return res.status(200).json(classe);
+	} catch (error) {
+		return res.status(500).json(error);
+	}
+})
 
 module.exports = router;
