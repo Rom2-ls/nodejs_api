@@ -26,6 +26,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 let classesRouter = require('./routes/classes');
 let studentsRouter = require('./routes/students');
+let coursRouter = require('./routes/cours');
 
 app
 .get('/', (req, res) => {
@@ -33,6 +34,7 @@ app
 })
 .use('/classes', classesRouter)
 .use('/students', studentsRouter)
+.use('/cours', coursRouter)
 .listen(4500, () => {
   console.log(`Running on http://127.0.0.1:4500`);
 });

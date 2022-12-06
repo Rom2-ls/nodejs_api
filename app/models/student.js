@@ -22,7 +22,7 @@ const studentSchema = new mongoose.Schema({
         require: [true, 'Entrez un mot de passe'],
         trim: true
     },
-    class:{
+    class: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Classe',
         require : false,

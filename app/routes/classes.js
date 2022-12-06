@@ -73,5 +73,23 @@ router.post('/', async (req, res) => {
 		return res.status(500).json(error);
 	}
 })
+.post('/add-cours', async (req, res) => {
+	try {
+		const {coursId, classId} = req.body;
+
+		classe = await classModel.findOneAndUpdate({
+			_id: classId.trim()
+		},{
+			$push: { cours: [coursId.trim()] }
+		},
+		{
+			new: true
+		}).populate("cours");
+
+		return res.status(200).json(classe);
+	} catch (e) {
+		return res.status(500).json({msg: e})
+	}
+})
 
 module.exports = router;

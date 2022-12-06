@@ -1,20 +1,24 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
-const classSchema = new mongoose.Schema({
+const coursSchema = new mongoose.Schema({
     name: {
         type: String,
         require: [true, 'Entrez un nom de classe'],
         trim: true
     },
-    students: [{
+    dateStart: {
+        type: Date,
+        require: true,
+        //min: Date.now
+    },
+    dateEnd: {
+        type: Date,
+        require: true,
+        min: this.dateStart
+    },
+    presence: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Student",
-        require: false,
-        trim: true
-    }],
-    cours: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Cours",
         require: false,
         trim: true
     }]
@@ -25,5 +29,4 @@ const classSchema = new mongoose.Schema({
     }
 });
 
-//export model créé a partir du schema
-module.exports = mongoose.model('Classe', classSchema);
+module.exports = mongoose.model('Cours', coursSchema);
