@@ -14,16 +14,18 @@ router.post('/', async (req, res) => {
         }
 
     try {
+        generatedCode = Math.floor(100000 + Math.random() * 900000)
+
         let cours = await coursModel.create({
             name: name,
             dateStart: dateStart,
-            dateEnd: dateEnd
+            dateEnd: dateEnd,
+            code: generatedCode
         });
 
         return res.status(200).json(cours)
     } catch (error) {
         return res.status(500).json({"msg": "Une erreur est survenue : " + error})
-
     }
 })
 .get('/', async (req, res) => {
@@ -61,38 +63,6 @@ router.post('/', async (req, res) => {
     } catch (e) {
         return res.status(500).json({"msg" : "Une erreur est survenue : " + e});
     }
-})
-.post('/sign-cours', async (req, res) => {
-    const studentId = req.session.student._id
-
-	if (studentId) {
-		try {
-            const currentDate = new Date()
-
-			check = await coursModel.findOne({
-                dateStart: { $lte: currentDate },
-                dateEnd: { $gte: currentDate },
-            })
-
-            if (check.presence.includes(studentId)) {
-                return res.status(200).json({msg: "Vous êtes déjà enregistré au cours"})
-            } else {
-                cours = await coursModel.findOneAndUpdate({
-                    dateStart: { $lte: currentDate },
-                    dateEnd: { $gte: currentDate },
-                }, {
-                    $push: { presence: [studentId.trim()] }
-                }, {
-                    new: true
-                }).populate("presence");    
-            }
-			return res.status(200).json(cours);
-		} catch (error) {
-            return res.status(500).json({msg: "erreur : " + error})
-		}
-	} else {
-		return res.status(500).json({msg: "Vous n'êtes pas connecté"})
-	}
-})
+});
 
 module.exports = router;

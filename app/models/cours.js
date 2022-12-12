@@ -16,6 +16,10 @@ const coursSchema = new mongoose.Schema({
         require: true,
         min: this.dateStart
     },
+    code: {
+        type: Number,
+        require: true,
+    },
     presence: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Student",
