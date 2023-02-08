@@ -26,8 +26,7 @@ const studentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Classe',
         require : false,
-        trim: true,
-        unique: [true, 'Possède déjà une classe']
+        trim: true
     }
 },{
     timestamps : {

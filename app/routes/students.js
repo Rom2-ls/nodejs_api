@@ -20,24 +20,29 @@ router.post('/register', async (req, res) => {
         typeof email_cfg ==='undefined' || email_cfg.trim() === "" ||
         typeof password ==='undefined' || password.trim() === "" ||
         typeof password_cfg ==='undefined' || password_cfg.trim() === "") {
+        console.log("Remplissez tous les champs");
         return res.status(500).json({"msg": "Remplissez tous les champs"});
     }
 
     if (email != email_cfg || password != password_cfg) {
+        console.log("email");
         return res.status(500).json({"msg": "Le mail ou mot de passe ne correspondent pas"})
     }
 
     if (!email.match(/^((?!\.)[\w-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gim)) {
+        console.log("email match");
         return res.status(500).json({"msg": "Le mail n'est pas conforme"})
     }
 
-    if (!password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm)) {
+    if (!password.match(/^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/)) {
+        console.log("pwd match");
         return res.status(500).json({"msg": "Le mot de passe n'est pas conforme"})
     }
 
     try {
         let findStudent = await studentModel.findOne({ email });
         if (findStudent) {
+            console.log("exist");
             return res.status(500).json({"msg": "Cet email existe déjà."});
         }
 
@@ -50,6 +55,7 @@ router.post('/register', async (req, res) => {
 
         return res.status(200).json(student);
     } catch (e) {
+        console.log(e);
         return res.status(500).json({"msg": "Une erreur est survenue : " + e})
     }
 })
@@ -60,12 +66,28 @@ router.post('/register', async (req, res) => {
         let findStudent = await studentModel.findOne({ email });
         if (findStudent && await bcrypt.compare(password,findStudent.password)) {
             req.session.student = findStudent;
+            console.log(req.session.student);
             return res.status(200).json({"msg": "user logged in"});
         } else {
             return res.status(500).json({"msg": "Email ou mot de passe incorrect"});
         }
     } catch (error) {
         return res.status(500).json({"msg": "Une erreur est survenue : " + e})
+    }
+})
+.put('/disconnect', (req, res) => {
+    try {
+        if (req.session.student) {
+            req.session.destroy();
+            console.log('session deleted');
+        }
+        else {
+            console.log("pas de session");
+            return res.status(500).json({"msg": "pas de connexion active"});
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({"msg": error});
     }
 })
 .get('/me', async (req, res) => {
